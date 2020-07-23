@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 // import logo from './logo.svg';
 import './App.css';
 import Home from './pages/Home';
 import { auth } from './services/firebase';
-
+import Header from "./components/Header";
 function App() {
   const [state, setState] = useState({
     authenticated: false,
@@ -23,10 +23,11 @@ function App() {
         });
       }
     })
-  },[])
+  }, [])
 
   return (
     <div className="App">
+      <Header />
       <Home />
     </div>
   );
