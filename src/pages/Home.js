@@ -5,6 +5,11 @@ import { Divider, Grid, Typography, makeStyles } from '@material-ui/core';
 import { font } from "../components/Misc";
 
 const useStyle = makeStyles({
+  root: {
+    padding: '20px', 
+    height:'80vh',
+    overflowY: 'auto'
+  },
   title: {
     fontSize: font.sm,
     color: 'grey',
@@ -12,16 +17,16 @@ const useStyle = makeStyles({
   }
 })
 
-export default function HomePage(props) {
+export default function HomePage() {
   const [state, setState] = useState({
     notes: [],
     folders: [],
     files: []
-  })
-  const { home, refresh } = props;
+  });
+  const [path, setPath] = useState("oneplus7pro@yopmailcom")
+
   useEffect(() => {
-    db.ref("emulater@yopmailcom").on("value", snapshot => {
-      console.log(home, refresh, '-------');
+    db.ref(path).on("value", snapshot => {
       let allNotes = [];
       let allFolder = [];
       let files = [];
@@ -37,16 +42,13 @@ export default function HomePage(props) {
         return note
       })
       setState({ notes: allNotes, folders: allFolder, files: files });
-      if (allNotes.length) {
-        if (home)
-          props.setHome(false)
-      }
     });
-  }, [home])
+  }, [])
 
   const handleClick = (data) => {
     console.log('data', data);
-    db.ref(`emulater@yopmailcom/${data.timedtamp * 1000}`)
+    setPath(`oneplus7pro@yopmailcom/${data.timedtamp * 1000}/`)
+    db.ref(`oneplus7pro@yopmailcom/${data.timedtamp * 1000}`)
       .set({
         clicked: true,
         name: data.name,
@@ -60,7 +62,7 @@ export default function HomePage(props) {
 
   const handleDelete = (data) => {
     console.log('data delete', data);
-    db.ref(`emulater@yopmailcom/${data.timedtamp * 1000}`)
+    db.ref(`oneplus7pro@yopmailcom${data.timedtamp * 1000}`)
       .set(null)
       .then(_ => {
       });
@@ -75,9 +77,8 @@ export default function HomePage(props) {
 
   const classes = useStyle();
   return (
-    <div style={{ padding: '20px' }}>
+    <div className={classes.root}>
       <section>
-        {/* <h1>Home page</h1> */}
         <div>
           <Grid item xs={12}>
             <Typography align='left' className={classes.title}>
