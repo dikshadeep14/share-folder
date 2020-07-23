@@ -3,22 +3,22 @@ import { db } from "../services/firebase";
 
 export default function HomePage() {
   const [state, setState] = useState({
-    notes: [],
-    content: ""
+    notes: []
+    
   })
+  const [content, setCont] = useState("");
   useEffect(() => {
     db.ref("notes").on("value", snapshot => {
       let allNotes = [];
       snapshot.forEach(snap => {
         allNotes.push(snap.val());
       });
-      console.log('allNotes', allNotes)
       setState({ notes: allNotes });
     });
   },[])
 
   const handleChange = (e) => {
-    setState({...state, content: e.target.value})
+    setCont(e.target.value)
   }
 
   const createNote = () => {
@@ -26,12 +26,12 @@ export default function HomePage() {
     const note_id = `note-${Date.now()}`;
     db.ref(`notes/${uid}`)
     .set({
-      content: state.content,
+      content: content,
       note_id,
       uid
     })
     .then(_ => {
-      setState({ content: "" });
+      setCont("")
     });
   }
   console.log('sttae', state);
