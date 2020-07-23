@@ -51,19 +51,15 @@ export default function Header(props) {
                     <Typography component="span" className={classes.chartSubTile}>12GB</Typography>
                 </Typography>
                 {/* <Divider flexItem orientation="vertical" /> */}
-                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                    <span onClick={() => {
-                        refresh()
-                    }}>
-                        <RefreshIcon />
-                    </span>
+                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={() => {
+                    refresh()
+                }}>
+                    <RefreshIcon />
                 </IconButton>
-                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                    <span onClick={() => {
-                        home()
-                    }}>
-                        <HomeIcon />
-                    </span>
+                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={() => {
+                    home()
+                }}>
+                    <HomeIcon />
                 </IconButton>
 
             </Grid>
