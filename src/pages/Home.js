@@ -12,15 +12,16 @@ const useStyle = makeStyles({
   }
 })
 
-export default function HomePage() {
+export default function HomePage(props) {
   const [state, setState] = useState({
     notes: [],
     folders: [],
     files: []
   })
-
+  const { home, refresh } = props;
   useEffect(() => {
     db.ref("emulater@yopmailcom").on("value", snapshot => {
+      console.log(home, refresh, '-------');
       let allNotes = [];
       let allFolder = [];
       let files = [];
@@ -36,8 +37,12 @@ export default function HomePage() {
         return note
       })
       setState({ notes: allNotes, folders: allFolder, files: files });
+      if (allNotes.length) {
+        if (home)
+          props.setHome(false)
+      }
     });
-  }, [])
+  }, [home])
 
   const handleClick = (data) => {
     console.log('data', data);

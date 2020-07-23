@@ -1,11 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import { Grid } from '@material-ui/core';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import HomeIcon from '@material-ui/icons/Home';
@@ -33,9 +29,14 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 400
     },
 }));
-export default function Header() {
+export default function Header(props) {
     const classes = useStyles();
-
+    const refresh = () => {
+        props.setRefresh(true)
+    }
+    const home = () => {
+        props.setHome(true)
+    }
     return (
         <Grid container className={classes.root} direction="row" justify="space-between" alignItems="center">
             <Grid item xs={8} style={{ textAlign: 'left', padding: 10 }}>
@@ -51,13 +52,21 @@ export default function Header() {
                 </Typography>
                 {/* <Divider flexItem orientation="vertical" /> */}
                 <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                    <RefreshIcon />
+                    <span onClick={() => {
+                        refresh()
+                    }}>
+                        <RefreshIcon />
+                    </span>
                 </IconButton>
                 <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                    <HomeIcon />
+                    <span onClick={() => {
+                        home()
+                    }}>
+                        <HomeIcon />
+                    </span>
                 </IconButton>
 
             </Grid>
-        </Grid>
+        </Grid >
     )
 } 
