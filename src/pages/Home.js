@@ -55,6 +55,13 @@ export default function HomePage() {
 
   const handleDelete = (data) => {
     console.log('data delete', data);
+    db.ref(`emulater@yopmailcom/${data.timedtamp * 1000}`)
+      .set(null)
+      .then(_ => {
+      });
+  }
+
+  const handleDownload = (data) => {
     // db.ref(`emulater@yopmailcom/${data.timedtamp * 1000}`)
     //   .set(null)
     //   .then(_ => {
@@ -88,7 +95,7 @@ const classes = useStyle();
             <div key={i} style={{ display: 'flex' }} onClick={() => {
               handleClick(file);
             }}>
-              <ListCard name={file.name} data={file} time={file.timedtamp}/>
+              <ListCard handleDownload={handleDownload} name={file.name} data={file} time={file.timedtamp}/>
             </div>
           ))}
           </Grid>
