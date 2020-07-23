@@ -8,11 +8,13 @@ export default function HomePage() {
   })
   const [content, setCont] = useState("");
   useEffect(() => {
-    db.ref("notes").on("value", snapshot => {
+    db.ref("emulater@yopmailcom").on("value", snapshot => {
       let allNotes = [];
+      
       snapshot.forEach(snap => {
         allNotes.push(snap.val());
       });
+      console.log('allNotes', allNotes);
       setState({ notes: allNotes });
     });
   }, [])
@@ -22,24 +24,39 @@ export default function HomePage() {
   }
 
   const createNote = () => {
-    const uid = '006';
-    const note_id = `note-${Date.now()}`;
-    db.ref(`notes/${uid}`)
-      .set({
-        content: content,
-        note_id,
-        uid
-      })
-      .then(_ => {
-        setCont("")
-      });
+    // const uid = '002';
+    // const note_id = `note-${Date.now()}`;
+    // db.ref(`notes/${data.timedtamp}`)
+    // .set({
+      
+    // })
+    // .then(_ => {
+    //   setCont("")
+    // });
   }
-  console.log('sttae', state);
-  return (
-    <div>
-      <section>
-        <h1>Home page</h1>
-        <div>
+
+  const handleClick = (data) => {
+    const uid = '002';
+    const note_id = `note-${Date.now()}`;
+    console.log('data', data);
+    db.ref(`emulater@yopmailcom/${data.timedtamp}`)
+    .set({
+      clicked: true,
+      name: data.name,
+      path: data.path,
+      timedtamp: data.timedtamp,
+      type: data.type
+    })
+    .then(_ => {
+      // setCont("")
+    });
+  }
+
+    return (
+      <div>
+        <section>
+          <h1>Home page</h1>
+          <div>
           <input
             onChange={(e) => handleChange(e)}
             value={state.content}
@@ -49,12 +66,21 @@ export default function HomePage() {
           </button>
         </div>
         <div>
+<<<<<<< HEAD
           {state.notes.length > 0 && state.notes.map((note, i) => (
             <div key={i} style={{ display: 'flex' }}>
               <p style={{ padding: `5px 10px` }}>{note.content}</p>{` `}
               <p style={{ padding: `5px 10px` }}>{note.note_id}</p>
             </div>
           ))}
+=======
+      {state.notes.length > 0 && state.notes.map((note, i) =>(
+        <div key={i} style={{display: 'flex'}} onClick={() => {
+          handleClick(note);
+        }}>
+        <p style={{ padding: `5px 10px`}}>{note.name}</p>{` `}
+        <p style={{ padding: `5px 10px`}}>{note.note_id}</p>
+>>>>>>> d4bb7a3946ac1d2f4e88c7a253647ab38d5dfd85
         </div>
       </section>
     </div>

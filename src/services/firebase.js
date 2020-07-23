@@ -1,8 +1,9 @@
 import firebase from "firebase";
 const config = {
-  apiKey: "AIzaSyBV7cZPUKapM1igznakxVnh5Ngp7HxY6yE",
-  authDomain: "sharefolder-f5062.firebaseapp.com",
-  databaseURL: "https://sharefolder-f5062.firebaseio.com"
+  apiKey: "AIzaSyBmTkMhw6EM3xEAJVa68K22yqyv5eUVG1M",
+  // "AIzaSyBV7cZPUKapM1igznakxVnh5Ngp7HxY6yE",
+  authDomain: "filesystem-46647.firebaseapp.com",
+  databaseURL: "https://filesystem-46647.firebaseio.com"
 };
 
 firebase.initializeApp(config);
