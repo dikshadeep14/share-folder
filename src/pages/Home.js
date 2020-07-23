@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { db } from "../services/firebase";
 import ListCard from "../components/List_card"
 import { Divider, Grid, Typography, makeStyles } from '@material-ui/core';
-import {font} from "../components/Misc";
+import { font } from "../components/Misc";
 
 const useStyle = makeStyles({
   title: {
@@ -27,7 +27,7 @@ export default function HomePage() {
         allNotes.push(snap.val());
       });
       allNotes.filter(note => {
-        if(note.type === 'Dir') {
+        if (note.type === 'Dir') {
           allFolder.push(note)
         } else {
           files.push(note)
@@ -50,36 +50,36 @@ export default function HomePage() {
       .then(_ => {
       });
   }
-const classes = useStyle();
+  const classes = useStyle();
   return (
-    <div style={{padding: '20px'}}>
+    <div style={{ padding: '20px' }}>
       <section>
-        <h1>Home page</h1>
+        {/* <h1>Home page</h1> */}
         <div>
           <Grid>
             <Typography align='left' className={classes.title}>
               Folders {state.folders.length}
             </Typography>
-          {state.folders.length > 0 && state.folders.map((folder, i) => (
-            <div key={i} style={{ display: 'flex' }} onClick={() => {
-              handleClick(folder);
-            }}>
-              <ListCard name={folder.name} time={folder.timedtamp}/>
-            </div>
-          ))}
+            {state.folders.length > 0 && state.folders.map((folder, i) => (
+              <div key={i} style={{ display: 'flex' }} onClick={() => {
+                handleClick(folder);
+              }}>
+                <ListCard name={folder.name} time={folder.timedtamp} />
+              </div>
+            ))}
           </Grid>
           <Divider />
           <Grid item xs={12}>
             <Typography align='left' className={classes.title}>
               Files {state.files.length}
             </Typography>
-          {state.files.length > 0 && state.files.map((file, i) => (
-            <div key={i} style={{ display: 'flex' }} onClick={() => {
-              handleClick(file);
-            }}>
-              <ListCard name={file.name} time={file.timedtamp}/>
-            </div>
-          ))}
+            {state.files.length > 0 && state.files.map((file, i) => (
+              <div key={i} style={{ display: 'flex' }} onClick={() => {
+                handleClick(file);
+              }}>
+                <ListCard name={file.name} time={file.timedtamp} />
+              </div>
+            ))}
           </Grid>
         </div>
       </section>

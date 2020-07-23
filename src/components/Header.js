@@ -24,19 +24,32 @@ const useStyles = makeStyles((theme) => ({
     title: {
         flexGrow: 1,
     },
+    legend: {
+        display: "inline-block",
+        padding: "0px 20px 0px 0px"
+    },
+    chartSubTile: {
+        fontSize: "1rem",
+        fontWeight: 400
+    },
 }));
 export default function Header() {
     const classes = useStyles();
 
     return (
-        <Grid container className={classes.root} direction="row" alignItems="center" alignContent="space-between" justify="space-between">
-            <Grid item xs={6} style={{ textAlign: 'left', paddingLeft: 20 }}>
+        <Grid container className={classes.root} direction="row" justify="space-between" alignItems="center">
+            <Grid item xs={8} style={{ textAlign: 'left', padding: 10 }}>
                 <Typography variant="h6" color="inherit">
                     Photos
     </Typography>
             </Grid>
-            <Grid item xs={6} style={{ textAlign: 'right' }}>
-                <Divider flexItem orientation="vertical" />
+
+            <Grid item xs={4} style={{ textAlign: 'right' }}>
+                <Typography component="div" className={classes.legend}>
+                    <Typography component="span" className={classes.chartSubTile}>6GB</Typography>{` / `}
+                    <Typography component="span" className={classes.chartSubTile}>12GB</Typography>
+                </Typography>
+                {/* <Divider flexItem orientation="vertical" /> */}
                 <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                     <RefreshIcon />
                 </IconButton>
