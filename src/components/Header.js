@@ -10,7 +10,7 @@ import { Divider } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        boxShadow: '2px 2px 4px 2px',
+        boxShadow: '2px 2px 4px 2px #00000033',
         height: '50px',
         backgroundColor: '#eaeaea'
     },
