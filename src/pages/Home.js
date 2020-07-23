@@ -7,7 +7,8 @@ import { font } from "../components/Misc";
 const useStyle = makeStyles({
   title: {
     fontSize: font.sm,
-    color: 'grey'
+    color: 'grey',
+    padding: `10px`
   }
 })
 
@@ -32,6 +33,7 @@ export default function HomePage() {
         } else {
           files.push(note)
         }
+        return note
       })
       setState({ notes: allNotes, folders: allFolder, files: files });
     });
@@ -50,13 +52,29 @@ export default function HomePage() {
       .then(_ => {
       });
   }
+
+  const handleDelete = (data) => {
+    console.log('data delete', data);
+    db.ref(`emulater@yopmailcom/${data.timedtamp * 1000}`)
+      .set(null)
+      .then(_ => {
+      });
+  }
+
+  const handleDownload = (data) => {
+    // db.ref(`emulater@yopmailcom/${data.timedtamp * 1000}`)
+    //   .set(null)
+    //   .then(_ => {
+    //   });
+  }
+
   const classes = useStyle();
   return (
     <div style={{ padding: '20px' }}>
       <section>
         {/* <h1>Home page</h1> */}
         <div>
-          <Grid>
+          <Grid item xs={12}>
             <Typography align='left' className={classes.title}>
               Folders {state.folders.length}
             </Typography>
@@ -64,7 +82,7 @@ export default function HomePage() {
               <div key={i} style={{ display: 'flex' }} onClick={() => {
                 handleClick(folder);
               }}>
-                <ListCard name={folder.name} time={folder.timedtamp} />
+                <ListCard name={folder.name} data={folder} time={folder.timedtamp} handleDelete={handleDelete} />
               </div>
             ))}
           </Grid>
@@ -77,7 +95,7 @@ export default function HomePage() {
               <div key={i} style={{ display: 'flex' }} onClick={() => {
                 handleClick(file);
               }}>
-                <ListCard name={file.name} time={file.timedtamp} />
+                <ListCard handleDownload={handleDownload} name={file.name} data={file} time={file.timedtamp} />
               </div>
             ))}
           </Grid>
