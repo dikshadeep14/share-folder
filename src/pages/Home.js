@@ -1,45 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import { db } from "../services/firebase";
+import ListCard from "../components/List_card"
+import { Divider, Grid, Typography, makeStyles } from '@material-ui/core';
+import {font} from "../components/Misc";
+
+const useStyle = makeStyles({
+  title: {
+    fontSize: font.sm,
+    color: 'grey'
+  }
+})
 
 export default function HomePage() {
   const [state, setState] = useState({
-    notes: []
-
+    notes: [],
+    folders: [],
+    files: []
   })
-  const [content, setCont] = useState("");
+
   useEffect(() => {
     db.ref("emulater@yopmailcom").on("value", snapshot => {
       let allNotes = [];
-
+      let allFolder = [];
+      let files = [];
       snapshot.forEach(snap => {
         allNotes.push(snap.val());
       });
-      console.log('allNotes', allNotes);
-      setState({ notes: allNotes });
+      allNotes.filter(note => {
+        if(note.type === 'Dir') {
+          allFolder.push(note)
+        } else {
+          files.push(note)
+        }
+      })
+      setState({ notes: allNotes, folders: allFolder, files: files });
     });
   }, [])
 
-  const handleChange = (e) => {
-    setCont(e.target.value)
-  }
-
-  const createNote = () => {
-    // const uid = '002';
-    // const note_id = `note-${Date.now()}`;
-    // db.ref(`notes/${data.timedtamp}`)
-    // .set({
-
-    // })
-    // .then(_ => {
-    //   setCont("")
-    // });
-  }
-
   const handleClick = (data) => {
-    const uid = '002';
-    const note_id = `note-${Date.now()}`;
     console.log('data', data);
-    db.ref(`emulater@yopmailcom/${data.timedtamp}`)
+    db.ref(`emulater@yopmailcom/${data.timedtamp * 1000}`)
       .set({
         clicked: true,
         name: data.name,
@@ -48,35 +48,41 @@ export default function HomePage() {
         type: data.type
       })
       .then(_ => {
-        // setCont("")
       });
   }
-
+const classes = useStyle();
   return (
-    <div>
+    <div style={{padding: '20px'}}>
       <section>
         <h1>Home page</h1>
         <div>
-          <input
-            onChange={(e) => handleChange(e)}
-            value={state.content}
-          />
-          <button onClick={createNote}>
-            Create Note
-          </button>
-        </div>
-        <div>
-          {state.notes.length > 0 && state.notes.map((note, i) => (
+          <Grid>
+            <Typography align='left' className={classes.title}>
+              Folders {state.folders.length}
+            </Typography>
+          {state.folders.length > 0 && state.folders.map((folder, i) => (
             <div key={i} style={{ display: 'flex' }} onClick={() => {
-              handleClick(note);
+              handleClick(folder);
             }}>
-              <p style={{ padding: `5px 10px` }}>{note.name}</p>{` `}
-              <p style={{ padding: `5px 10px` }}>{note.note_id}</p>
+              <ListCard name={folder.name} time={folder.timedtamp}/>
             </div>
           ))}
+          </Grid>
+          <Divider />
+          <Grid item xs={12}>
+            <Typography align='left' className={classes.title}>
+              Files {state.files.length}
+            </Typography>
+          {state.files.length > 0 && state.files.map((file, i) => (
+            <div key={i} style={{ display: 'flex' }} onClick={() => {
+              handleClick(file);
+            }}>
+              <ListCard name={file.name} time={file.timedtamp}/>
+            </div>
+          ))}
+          </Grid>
         </div>
       </section>
     </div>
   )
-
 }
