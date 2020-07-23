@@ -9,8 +9,6 @@ function App() {
     authenticated: false,
     loading: true,
   })
-  const [home, setHome] = useState(false)
-  const [refresh, setRefresh] = useState(false)
 
   useEffect(() => {
     auth().onAuthStateChanged((user) => {
@@ -32,15 +30,8 @@ function App() {
     <div className="App">
       {state.loading ? <CircularProgress /> :
         <>
-          <Header
-            setHome={(data) => setHome(data)}
-            setRefresh={(data) => setRefresh(data)}
-          />
+
           <Home
-            setHome={(data) => setHome(data)}
-            setRefresh={(data) => setRefresh(data)}
-            home={home}
-            refresh={refresh}
           />
         </>
       }

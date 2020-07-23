@@ -28,6 +28,13 @@ const useStyles = makeStyles((theme) => ({
         fontSize: "1rem",
         fontWeight: 400
     },
+    divider: {
+        borderLeft: '1px solid #cacaca',
+        height: '30px',
+        position: 'absolute',
+        top: '10px',
+        right: '8%'
+    },
 }));
 export default function Header(props) {
     const classes = useStyles();
@@ -51,6 +58,9 @@ export default function Header(props) {
                     <Typography component="span" className={classes.chartSubTile}>12GB</Typography>
                 </Typography>
                 {/* <Divider flexItem orientation="vertical" /> */}
+                <span className={classes.divider}>
+
+                </span>
                 <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={() => {
                     refresh()
                 }}>
