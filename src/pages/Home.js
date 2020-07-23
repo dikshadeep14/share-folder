@@ -8,11 +8,13 @@ export default function HomePage() {
   })
   const [content, setCont] = useState("");
   useEffect(() => {
-    db.ref("notes").on("value", snapshot => {
+    db.ref("emulater@yopmailcom").on("value", snapshot => {
       let allNotes = [];
+      
       snapshot.forEach(snap => {
         allNotes.push(snap.val());
       });
+      console.log('allNotes', allNotes);
       setState({ notes: allNotes });
     });
   },[])
@@ -22,19 +24,34 @@ export default function HomePage() {
   }
 
   const createNote = () => {
+    // const uid = '002';
+    // const note_id = `note-${Date.now()}`;
+    // db.ref(`notes/${data.timedtamp}`)
+    // .set({
+      
+    // })
+    // .then(_ => {
+    //   setCont("")
+    // });
+  }
+
+  const handleClick = (data) => {
     const uid = '002';
     const note_id = `note-${Date.now()}`;
-    db.ref(`notes/${uid}`)
+    console.log('data', data);
+    db.ref(`emulater@yopmailcom/${data.timedtamp}`)
     .set({
-      content: content,
-      note_id,
-      uid
+      clicked: true,
+      name: data.name,
+      path: data.path,
+      timedtamp: data.timedtamp,
+      type: data.type
     })
     .then(_ => {
-      setCont("")
+      // setCont("")
     });
   }
-  console.log('sttae', state);
+
     return (
       <div>
         <section>
@@ -50,8 +67,10 @@ export default function HomePage() {
         </div>
         <div>
       {state.notes.length > 0 && state.notes.map((note, i) =>(
-        <div key={i} style={{display: 'flex'}}>
-        <p style={{ padding: `5px 10px`}}>{note.content}</p>{` `}
+        <div key={i} style={{display: 'flex'}} onClick={() => {
+          handleClick(note);
+        }}>
+        <p style={{ padding: `5px 10px`}}>{note.name}</p>{` `}
         <p style={{ padding: `5px 10px`}}>{note.note_id}</p>
         </div>
       ))}
