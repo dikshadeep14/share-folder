@@ -10,7 +10,7 @@ export default function HomePage() {
   useEffect(() => {
     db.ref("emulater@yopmailcom").on("value", snapshot => {
       let allNotes = [];
-      
+
       snapshot.forEach(snap => {
         allNotes.push(snap.val());
       });
@@ -28,7 +28,7 @@ export default function HomePage() {
     // const note_id = `note-${Date.now()}`;
     // db.ref(`notes/${data.timedtamp}`)
     // .set({
-      
+
     // })
     // .then(_ => {
     //   setCont("")
@@ -40,23 +40,23 @@ export default function HomePage() {
     const note_id = `note-${Date.now()}`;
     console.log('data', data);
     db.ref(`emulater@yopmailcom/${data.timedtamp}`)
-    .set({
-      clicked: true,
-      name: data.name,
-      path: data.path,
-      timedtamp: data.timedtamp,
-      type: data.type
-    })
-    .then(_ => {
-      // setCont("")
-    });
+      .set({
+        clicked: true,
+        name: data.name,
+        path: data.path,
+        timedtamp: data.timedtamp,
+        type: data.type
+      })
+      .then(_ => {
+        // setCont("")
+      });
   }
 
-    return (
-      <div>
-        <section>
-          <h1>Home page</h1>
-          <div>
+  return (
+    <div>
+      <section>
+        <h1>Home page</h1>
+        <div>
           <input
             onChange={(e) => handleChange(e)}
             value={state.content}
@@ -66,21 +66,14 @@ export default function HomePage() {
           </button>
         </div>
         <div>
-<<<<<<< HEAD
           {state.notes.length > 0 && state.notes.map((note, i) => (
-            <div key={i} style={{ display: 'flex' }}>
-              <p style={{ padding: `5px 10px` }}>{note.content}</p>{` `}
+            <div key={i} style={{ display: 'flex' }} onClick={() => {
+              handleClick(note);
+            }}>
+              <p style={{ padding: `5px 10px` }}>{note.name}</p>{` `}
               <p style={{ padding: `5px 10px` }}>{note.note_id}</p>
             </div>
           ))}
-=======
-      {state.notes.length > 0 && state.notes.map((note, i) =>(
-        <div key={i} style={{display: 'flex'}} onClick={() => {
-          handleClick(note);
-        }}>
-        <p style={{ padding: `5px 10px`}}>{note.name}</p>{` `}
-        <p style={{ padding: `5px 10px`}}>{note.note_id}</p>
->>>>>>> d4bb7a3946ac1d2f4e88c7a253647ab38d5dfd85
         </div>
       </section>
     </div>
