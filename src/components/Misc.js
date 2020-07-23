@@ -4,3 +4,8 @@ export const font = {
   sm: '12px'
 }
 
+export const fontColor = {
+  grey: 'grey',
+  white: 'white'
+}
+

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-// import logo from './logo.svg';
+import {CircularProgress} from "@material-ui/core";
 import './App.css';
 import Home from './pages/Home';
 import { auth } from './services/firebase';
@@ -27,7 +27,10 @@ function App() {
 
   return (
     <div className="App">
-      <Home />
+      {state.loading ? <CircularProgress /> :
+        <Home />
+      }
+      
     </div>
   );
 }
