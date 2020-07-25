@@ -30,7 +30,7 @@ export default function HomePage() {
   const [path, setPath] = useState({});
 
   useEffect(() => {
-    db.ref("oneplus7prodeletetest@yopmailcom").on("value", snapshot => {
+    db.ref("oneplus7pro@yopmailcom").on("value", snapshot => {
       let allNotes = [];
       let allFolder = [];
       let files = [];
@@ -38,7 +38,7 @@ export default function HomePage() {
         // console.log(allNotes);
         allNotes.push({ ...snap.val(), key: snap.key });
       });
-      console.log(allNotes);
+      // console.log(allNotes);
       allNotes.filter(note => {
         if (note.type === 'Dir') {
           allFolder.push(note)
@@ -48,31 +48,28 @@ export default function HomePage() {
         return note
       })
       setState({ notes: allNotes, folders: allFolder, files: files });
-      if (allNotes.length) {
-        if (home) {
-          setHome(false);
-        }
-      } else {
-        if (Object.keys(history).length) {
-          // db.ref(`oneplus7prodeletetest@yopmailcom/${history.timedtamp}`)
-          //   .update({
-          //     clicked: "0",
-          //     name: history.name,
-          //     path: history.path,
-          //     timedtamp: history.timedtamp,
-          //     type: history.type
-          //   })
-          //   .then(_ => {
-          //     sethistory(data);
-          //   });
-        }
-      }
     });
   }, [home])
 
+  function forceDownload(url, fileName) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.responseType = "blob";
+    xhr.onload = function () {
+      var urlCreator = window.URL || window.webkitURL;
+      var imageUrl = urlCreator.createObjectURL(this.response);
+      var tag = document.createElement('a');
+      tag.href = imageUrl;
+      tag.download = fileName;
+      document.body.appendChild(tag);
+      tag.click();
+      document.body.removeChild(tag);
+    }
+    xhr.send();
+  }
   const handleClick = (data) => {
     setPath(data);
-    db.ref(`oneplus7prodeletetest@yopmailcom/${data.key}`)
+    db.ref(`oneplus7pro@yopmailcom/${data.key}`)
       .update({
         clicked: "0",
         name: data.name,
@@ -85,18 +82,41 @@ export default function HomePage() {
       });
   }
 
-  const handleBack = (data) => {
-    db.ref(`oneplus7prodeletetest@yopmailcom/${path.timedtamp * 1000}`)
-      .update({
-        clicked: "1",
-        name: path.name,
-        path: path.path,
-        timedtamp: path.timedtamp,
-        type: path.type
-      })
-      .then(_ => {
-        setPath(data);
-      });
+  const handleBack = () => {
+    var str = history.path.split("/");
+    let path = str.splice(0, str.length - 1).join().replace(/,/g, "/");
+    if (state.notes.length) {
+      let present = state.notes[0];
+      db.ref(`oneplus7pro@yopmailcom/${present.key}`)
+        .update({
+          path: path,
+        })
+        .then(_ => {
+          // setPath(data);
+          sethistory({ ...present, path: path })
+        });
+    } else {
+      db.ref(`oneplus7pro@yopmailcom`)
+        .push({
+          clicked: "1",
+          name: history.name,
+          path: path,
+          timedtamp: history.timedtamp,
+          type: history.type
+        })
+        .then(_ => {
+          // setPath(data);
+          // console.log(_, 'back', path);
+          db.ref(`oneplus7pro@yopmailcom/${_.key}`)
+            .update({
+              path: path + '/',
+            })
+            .then(_ => {
+              // setPath(data);
+              sethistory({ ...state.notes[0], path: path })
+            });
+        });
+    }
   }
 
   const handleDownload = (data) => {
@@ -104,25 +124,15 @@ export default function HomePage() {
       ...data,
       clicked: "2"
     }
-    db.ref(`oneplus7prodeletetest@yopmailcom`).child(data.key)
+    db.ref(`oneplus7pro@yopmailcom`).child(data.key)
       .set(a)
       .then(_ => {
-        var httpsReference = storageRef.refFromURL('gs://filesystem-46647.appspot.com/filesystem/Screenshot (2).png');
+        var httpsReference = storageRef.refFromURL('gs://filesystem-46647.appspot.com/fileSystem/' + data.timedtamp);
         httpsReference.getDownloadURL().then(function (url) {
           // `url` is the download URL for 'images/stars.jpg'
-          console.log(url, 'url');
+          // console.log(url, 'url');
           // This can be downloaded directly:
-          var xhr = new XMLHttpRequest();
-          xhr.responseType = 'blob';
-          xhr.onload = function (event) {
-            var blob = xhr.response;
-          };
-          xhr.open('GET', url);
-          xhr.send();
-
-          // Or inserted into an <img> element:
-          // var img = document.getElementById('myimg');
-          // img.src = url;
+          forceDownload(url, 'test')
         }).catch(function (error) {
           // Handle any errors
         });
@@ -131,7 +141,7 @@ export default function HomePage() {
 
   const handleDelete = (data) => {
     console.log(data, 'delete');
-    db.ref(`oneplus7prodeletetest@yopmailcom/${data.key}`)
+    db.ref(`oneplus7pro@yopmailcom/${data.key}`)
       .update({
         clicked: "3"
       })
@@ -151,7 +161,9 @@ export default function HomePage() {
       <Header
         setHome={(data) => setHome(data)}
         setRefresh={(data) => setRefresh(data)}
+        history={history}
         breadcrumb={bread}
+        handleBack={handleBack}
       />
       <div className={classes.root}>
         <section>
