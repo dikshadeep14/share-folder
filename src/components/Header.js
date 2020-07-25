@@ -6,6 +6,7 @@ import { Grid } from '@material-ui/core';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import HomeIcon from '@material-ui/icons/Home';
 import { Divider } from '@material-ui/core';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -35,6 +36,11 @@ const useStyles = makeStyles((theme) => ({
         top: '10px',
         right: '8%'
     },
+    backButton:{
+        padding: `0px 10px`,
+        alignItems: 'center',
+        cursor: 'pointer'
+    }
 }));
 export default function Header(props) {
     console.log(props);
@@ -47,7 +53,10 @@ export default function Header(props) {
     }
     return (
         <Grid container className={classes.root} direction="row" justify="space-between" alignItems="center">
-            <Grid item xs={8} style={{ textAlign: 'left', padding: 10 }}>
+            <span className={classes.backButton} onClick={props.handleBack}>
+                <ArrowBackIcon />
+            </span>
+            <Grid item xs={7} style={{ textAlign: 'left', padding: 10 }}>
                 <Typography variant="h6" color="inherit">
                     {props.breadcrumb()}
                 </Typography>

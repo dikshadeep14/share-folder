@@ -35,7 +35,6 @@ export default function HomePage() {
       let allFolder = [];
       let files = [];
       snapshot.forEach(snap => {
-        // console.log(allNotes);
         allNotes.push({ ...snap.val(), key: snap.key });
       });
       console.log(allNotes);
@@ -54,17 +53,6 @@ export default function HomePage() {
         }
       } else {
         if (Object.keys(history).length) {
-          // db.ref(`oneplus7prodeletetest@yopmailcom/${history.timedtamp}`)
-          //   .update({
-          //     clicked: "0",
-          //     name: history.name,
-          //     path: history.path,
-          //     timedtamp: history.timedtamp,
-          //     type: history.type
-          //   })
-          //   .then(_ => {
-          //     sethistory(data);
-          //   });
         }
       }
     });
@@ -85,8 +73,8 @@ export default function HomePage() {
       });
   }
 
-  const handleBack = (data) => {
-    db.ref(`oneplus7prodeletetest@yopmailcom/${path.timedtamp * 1000}`)
+  const handleBack = () => {
+    db.ref(`oneplus7prodeletetest@yopmailcom/${path.key}`)
       .update({
         clicked: "1",
         name: path.name,
@@ -95,7 +83,6 @@ export default function HomePage() {
         type: path.type
       })
       .then(_ => {
-        setPath(data);
       });
   }
 
@@ -120,9 +107,6 @@ export default function HomePage() {
           xhr.open('GET', url);
           xhr.send();
 
-          // Or inserted into an <img> element:
-          // var img = document.getElementById('myimg');
-          // img.src = url;
         }).catch(function (error) {
           // Handle any errors
         });
@@ -152,6 +136,7 @@ export default function HomePage() {
         setHome={(data) => setHome(data)}
         setRefresh={(data) => setRefresh(data)}
         breadcrumb={bread}
+        handleBack={handleBack}
       />
       <div className={classes.root}>
         <section>
