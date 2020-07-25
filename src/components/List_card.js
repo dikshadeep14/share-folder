@@ -5,9 +5,9 @@ import FolderIcon from '@material-ui/icons/Folder';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PermDeviceInformationIcon from '@material-ui/icons/PermDeviceInformation';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
-import {font, fontColor} from "./Misc";
+import { font, fontColor } from "./Misc";
 
-const useStyle=makeStyles({
+const useStyle = makeStyles({
   root: {
     padding: '10px'
   },
@@ -44,25 +44,27 @@ const useStyle=makeStyles({
   }
 })
 
-export default function ListCard (props) {
-  const {handleDelete, data, handleDownload} = props;
+export default function ListCard(props) {
+  const { handleDelete, data, handleDownload, handleClick } = props;
   const classes = useStyle();
-  return(
+  return (
     <Grid item xs={12} className={classes.root} container direction="row" justify="space-between">
       <Grid item xs={6} sm={8} md={10} container direction="row">
 
         <Icon className={classes.iconBox}>
-          {data.type === 'Dir' ? <FolderIcon className={classes.iconColor} /> : <PermDeviceInformationIcon className={classes.iconColor}/>}
+          {data.type === 'Dir' ? <FolderIcon className={classes.iconColor} /> : <PermDeviceInformationIcon className={classes.iconColor} />}
         </Icon>
         <Grid>
-          <Typography className={classes.name} align="left">
+          <Typography className={classes.name} align="left" onClick={() => {
+            handleClick(data);
+          }}>
             {props.name}
           </Typography>
           <Typography align="left" className={classes.timeS}>{moment(props.time).format('DD MMM YYYY HH:MM')}</Typography>
         </Grid>
       </Grid>
       <Grid item xs={6} sm={4} md={2} container justify="flex-end" direction="row">
-        {data.type==='File' && <span onClick={() => {
+        {data.type === 'File' && <span onClick={() => {
           handleDownload(data)
         }}>
           <CloudDownloadIcon className={classes.downloadColor} />
