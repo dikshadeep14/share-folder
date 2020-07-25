@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 export default function Header(props) {
+    console.log(props);
     const classes = useStyles();
     const refresh = () => {
         props.setRefresh(true)
@@ -48,8 +49,8 @@ export default function Header(props) {
         <Grid container className={classes.root} direction="row" justify="space-between" alignItems="center">
             <Grid item xs={8} style={{ textAlign: 'left', padding: 10 }}>
                 <Typography variant="h6" color="inherit">
-                    Photos
-    </Typography>
+                    {props.breadcrumb()}
+                </Typography>
             </Grid>
 
             <Grid item xs={4} style={{ textAlign: 'right' }}>

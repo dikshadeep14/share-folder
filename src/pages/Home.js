@@ -26,6 +26,7 @@ export default function HomePage() {
   });
   const [home, setHome] = useState(false)
   const [refresh, setRefresh] = useState(false)
+  const [history, sethistory] = useState({})
   const [path, setPath] = useState("oneplus7pro@yopmailcom")
 
   useEffect(() => {
@@ -47,30 +48,46 @@ export default function HomePage() {
       })
       setState({ notes: allNotes, folders: allFolder, files: files });
       if (allNotes.length) {
-        if (home)
-          setHome(false)
+        if (home) {
+          setHome(false);
+        }
+      } else {
+        if (Object.keys(history).length) {
+          // db.ref(`oneplus7pro@yopmailcom/${history.timedtamp}`)
+          //   .set({
+          //     clicked: "0",
+          //     name: history.name,
+          //     path: history.path,
+          //     timedtamp: history.timedtamp,
+          //     type: history.type
+          //   })
+          //   .then(_ => {
+          //     sethistory(data);
+          //   });
+        }
       }
     });
   }, [home])
 
   const handleClick = (data) => {
     console.log('data', data);
-    setPath(`oneplus7pro@yopmailcom/${data.timedtamp * 1000}/`)
-    db.ref(`oneplus7pro@yopmailcom/${data.timedtamp * 1000}`)
+    setPath(`oneplus7pro@yopmailcom/${data.timedtamp}/`)
+    db.ref(`oneplus7pro@yopmailcom/${data.timedtamp}`)
       .set({
-        clicked: true,
+        clicked: "0",
         name: data.name,
         path: data.path,
         timedtamp: data.timedtamp,
         type: data.type
       })
       .then(_ => {
+        sethistory(data);
       });
   }
 
   const handleDelete = (data) => {
     console.log('data delete', data);
-    db.ref(`oneplus7pro@yopmailcom${data.timedtamp * 1000}`)
+    db.ref(`oneplus7pro@yopmailcom${data.timedtamp}`)
       .set(null)
       .then(_ => {
       });
@@ -82,13 +99,20 @@ export default function HomePage() {
     //   .then(_ => {
     //   });
   }
-
+  const bread = () => {
+    if (state.folders.length > 0) {
+      let arr = state.folders[0].path.split('/');
+      arr.splice(-1, 1);
+      return arr.join('/');
+    }
+  }
   const classes = useStyle();
   return (
     <>
       <Header
         setHome={(data) => setHome(data)}
         setRefresh={(data) => setRefresh(data)}
+        breadcrumb={bread}
       />
       <div className={classes.root}>
         <section>
