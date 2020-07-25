@@ -26,11 +26,10 @@ export default function HomePage() {
   });
   const [home, setHome] = useState(false)
   const [refresh, setRefresh] = useState(false)
-  const [path, setPath] = useState("oneplus7pro@yopmailcom")
+  const [path, setPath] = useState({});
 
   useEffect(() => {
-    console.log(home);
-    db.ref(path).on("value", snapshot => {
+    db.ref("oneplus7pro@yopmailcom").on("value", snapshot => {
       let allNotes = [];
       let allFolder = [];
       let files = [];
@@ -54,11 +53,10 @@ export default function HomePage() {
   }, [home])
 
   const handleClick = (data) => {
-    console.log('data', data);
-    setPath(`oneplus7pro@yopmailcom/${data.timedtamp * 1000}/`)
+    setPath(data);
     db.ref(`oneplus7pro@yopmailcom/${data.timedtamp * 1000}`)
       .set({
-        clicked: true,
+        clicked: "0",
         name: data.name,
         path: data.path,
         timedtamp: data.timedtamp,
@@ -68,19 +66,44 @@ export default function HomePage() {
       });
   }
 
-  const handleDelete = (data) => {
-    console.log('data delete', data);
-    db.ref(`oneplus7pro@yopmailcom${data.timedtamp * 1000}`)
-      .set(null)
+  const handleBack = (data) => {
+    db.ref(`oneplus7pro@yopmailcom/${path.timedtamp * 1000}`)
+      .set({
+        clicked: "1",
+        name: path.name,
+        path: path.path,
+        timedtamp: path.timedtamp,
+        type: path.type
+      })
       .then(_ => {
+        setPath(data);
       });
   }
 
   const handleDownload = (data) => {
-    // db.ref(`emulater@yopmailcom/${data.timedtamp * 1000}`)
-    //   .set(null)
-    //   .then(_ => {
-    //   });
+    db.ref(`oneplus7pro@yopmailcom/${data.timedtamp * 1000}`)
+      .set({
+        clicked: "2",
+        name: data.name,
+        path: data.path,
+        timedtamp: data.timedtamp,
+        type: data.type
+      })
+      .then(_ => {
+    });
+  }
+
+  const handleDelete = (data) => {
+    db.ref(`oneplus7pro@yopmailcom/${data.timedtamp * 1000}`)
+      .set({
+        clicked: "3",
+        name: data.name,
+        path: data.path,
+        timedtamp: data.timedtamp,
+        type: data.type
+      })
+      .then(_ => {
+    });
   }
 
   const classes = useStyle();
@@ -114,7 +137,7 @@ export default function HomePage() {
                 <div key={i} style={{ display: 'flex' }} onClick={() => {
                   handleClick(file);
                 }}>
-                  <ListCard handleDownload={handleDownload} name={file.name} data={file} time={file.timedtamp} />
+                  <ListCard handleDownload={handleDownload} handleDelete={handleDelete} name={file.name} data={file} time={file.timedtamp} />
                 </div>
               ))}
             </Grid>
