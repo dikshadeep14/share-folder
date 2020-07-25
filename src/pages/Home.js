@@ -69,18 +69,19 @@ export default function HomePage() {
   }, [home])
 
   const handleClick = (data) => {
-    setPath(data);
-    db.ref(`oneplus7pro@yopmailcom/${data.timedtamp * 1000}`)
-      .set({
-        clicked: "0",
-        name: data.name,
-        path: data.path,
-        timedtamp: data.timedtamp,
-        type: data.type
-      })
-      .then(_ => {
-        sethistory(data);
-      });
+    console.log('data', data);
+    // setPath(data);
+    // db.ref(`oneplus7pro@yopmailcom/${data.timedtamp * 1000}`)
+    //   .set({
+    //     clicked: "0",
+    //     name: data.name,
+    //     path: data.path,
+    //     timedtamp: data.timedtamp,
+    //     type: data.type
+    //   })
+    //   .then(_ => {
+    //     sethistory(data);
+    //   });
   }
 
   const handleBack = (data) => {
@@ -112,7 +113,7 @@ export default function HomePage() {
 
   const handleDelete = (data) => {
     db.ref(`oneplus7pro@yopmailcom/${data.timedtamp * 1000}`)
-      .set({
+      .update({
         clicked: "3",
         name: data.name,
         path: data.path,
