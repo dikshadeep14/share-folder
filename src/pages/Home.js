@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { db, storageRef } from "../services/firebase";
 import ListCard from "../components/List_card"
 import { Divider, Grid, Typography, makeStyles } from '@material-ui/core';
+
 import { font } from "../components/Misc";
 import Header from "../components/Header"
+import Loader from "../components/Loader"
 
 const useStyle = makeStyles({
   root: {
@@ -20,15 +22,15 @@ const useStyle = makeStyles({
 const baseRef = `oneplus7prodeletetest@yopmailcom`;
 
 export default function HomePage() {
+
   const [state, setState] = useState({
     notes: [],
     folders: [],
     files: []
   });
   const [home, setHome] = useState(false)
-  const [refresh, setRefresh] = useState(false)
+  const [isLoad, setLoading] = useState(false)
   const [history, sethistory] = useState({})
-  const [path, setPath] = useState({});
 
   useEffect(() => {
     db.ref(baseRef).on("value", snapshot => {
@@ -38,7 +40,6 @@ export default function HomePage() {
       snapshot.forEach(snap => {
         allNotes.push({ ...snap.val(), key: snap.key });
       });
-      // console.log(allNotes);
       allNotes.filter(note => {
         if (note.type === 'Dir') {
           allFolder.push(note)
@@ -51,7 +52,9 @@ export default function HomePage() {
     });
   }, [home])
 
+
   function forceDownload(url, fileName) {
+
     var xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
     xhr.responseType = "blob";
@@ -68,7 +71,6 @@ export default function HomePage() {
     xhr.send();
   }
   const handleClick = (data) => {
-    setPath(data);
     db.ref(`${baseRef}/${data.key}`)
       .update({
         clicked: "0",
@@ -81,8 +83,8 @@ export default function HomePage() {
         sethistory(data);
       });
   }
-
   const handleBack = () => {
+    console.log(history);
     var str = history.path.split("/");
     let path = str.splice(0, str.length - 1).join().replace(/,/g, "/");
     if (state.notes.length) {
@@ -105,14 +107,11 @@ export default function HomePage() {
           type: history.type
         })
         .then(_ => {
-          // setPath(data);
-          // console.log(_, 'back', path);
           db.ref(`${baseRef}/${_.key}`)
             .update({
               path: path + '/',
             })
             .then(_ => {
-              // setPath(data);
               sethistory({ ...state.notes[0], path: path })
             });
         });
@@ -120,6 +119,7 @@ export default function HomePage() {
   }
 
   const handleDownload = (data) => {
+    setLoading(true);
     let a = {
       ...data,
       clicked: "2"
@@ -127,35 +127,26 @@ export default function HomePage() {
     db.ref(baseRef).child(data.key)
       .set(a)
       .then(_ => {
-        let httpsReference = storageRef.refFromURL('gs://filesystem-46647.appspot.com/fileSystem/' + data.timedtamp);
-
-        httpsReference.getDownloadURL().then(function (url) {
-          // `url` is the download URL for 'images/stars.jpg'
-          // This can be downloaded directly:
-          forceDownload(url, 'test')
-        }).catch(function (error) {
-          // Handle any errors
-          switch (error.code) {
-            case 'storage/object-not-found':
-              // File doesn't exist
-              break;
-
-            case 'storage/unauthorized':
-              // User doesn't have permission to access the object
-              break;
-
-            case 'storage/canceled':
-              // User canceled the upload
-              break;
-            case 'storage/unknown':
-              // Unknown error occurred, inspect the server response
-              break;
+        var httpsReference = storageRef.refFromURL('gs://filesystem-46647.appspot.com/fileSystem/' + data.timedtamp);
+        httpsReference.getDownloadURL().then(onResolve, onReject);
+        function onResolve(foundURL) {
+          forceDownload(foundURL, 'test')
+          setLoading(false)
+        }
+        function onReject(error) {
+          if (error.code === "storage/object-not-found") {
+            setTimeout(() => {
+              httpsReference.getDownloadURL().then(onResolve, onReject);
+            }, 2000)
+          } else {
+            setLoading(false);
           }
-        });
+        }
       });
   }
 
   const handleDelete = (data) => {
+    setLoading(true)
     db.ref(`${baseRef}/${data.key}`)
       .update({
         clicked: "3"
@@ -163,7 +154,26 @@ export default function HomePage() {
       .then(_ => {
         sethistory(data);
       }).then(() => {
-        handleBack();
+        var str = data.path.split("/");
+        let path = str.splice(0, str.length - 1).join().replace(/,/g, "/");
+        db.ref(`${baseRef}`)
+          .push({
+            clicked: "1",
+            name: data.name,
+            path: path,
+            timedtamp: data.timedtamp,
+            type: data.type
+          })
+          .then(_ => {
+            db.ref(`${baseRef}/${_.key}`)
+              .update({
+                path: path + '/',
+              })
+              .then(_ => {
+                setLoading(false);
+                sethistory({ ...state.notes[0], path: path })
+              });
+          });
       });
   }
 
@@ -174,12 +184,14 @@ export default function HomePage() {
       return arr.join('/');
     }
   }
+
   const classes = useStyle();
   return (
     <>
+      <Loader loading={isLoad} />
       <Header
         setHome={(data) => setHome(data)}
-        setRefresh={(data) => setRefresh(data)}
+        // setRefresh={(data) => setRefresh(data)}
         history={history}
         breadcrumb={bread}
         handleBack={handleBack}
