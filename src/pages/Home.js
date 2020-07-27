@@ -30,12 +30,11 @@ export default function HomePage() {
   const [path, setPath] = useState({});
 
   useEffect(() => {
-    db.ref("oneplus7pro@yopmailcom").on("value", snapshot => {
+    db.ref("oneplus7prodeletetest@yopmailcom").on("value", snapshot => {
       let allNotes = [];
       let allFolder = [];
       let files = [];
       snapshot.forEach(snap => {
-        // console.log(allNotes);
         allNotes.push({ ...snap.val(), key: snap.key });
       });
       // console.log(allNotes);
@@ -69,7 +68,7 @@ export default function HomePage() {
   }
   const handleClick = (data) => {
     setPath(data);
-    db.ref(`oneplus7pro@yopmailcom/${data.key}`)
+    db.ref(`oneplus7prodeletetest@yopmailcom/${data.key}`)
       .update({
         clicked: "0",
         name: data.name,
@@ -87,7 +86,7 @@ export default function HomePage() {
     let path = str.splice(0, str.length - 1).join().replace(/,/g, "/");
     if (state.notes.length) {
       let present = state.notes[0];
-      db.ref(`oneplus7pro@yopmailcom/${present.key}`)
+      db.ref(`oneplus7prodeletetest@yopmailcom/${present.key}`)
         .update({
           path: path,
         })
@@ -96,7 +95,7 @@ export default function HomePage() {
           sethistory({ ...present, path: path })
         });
     } else {
-      db.ref(`oneplus7pro@yopmailcom`)
+      db.ref(`oneplus7prodeletetest@yopmailcom`)
         .push({
           clicked: "1",
           name: history.name,
@@ -107,7 +106,7 @@ export default function HomePage() {
         .then(_ => {
           // setPath(data);
           // console.log(_, 'back', path);
-          db.ref(`oneplus7pro@yopmailcom/${_.key}`)
+          db.ref(`oneplus7prodeletetest@yopmailcom/${_.key}`)
             .update({
               path: path + '/',
             })
@@ -124,7 +123,7 @@ export default function HomePage() {
       ...data,
       clicked: "2"
     }
-    db.ref(`oneplus7pro@yopmailcom`).child(data.key)
+    db.ref(`oneplus7prodeletetest@yopmailcom`).child(data.key)
       .set(a)
       .then(_ => {
         var httpsReference = storageRef.refFromURL('gs://filesystem-46647.appspot.com/fileSystem/' + data.timedtamp);
@@ -141,7 +140,7 @@ export default function HomePage() {
 
   const handleDelete = (data) => {
     console.log(data, 'delete');
-    db.ref(`oneplus7pro@yopmailcom/${data.key}`)
+    db.ref(`oneplus7prodeletetest@yopmailcom/${data.key}`)
       .update({
         clicked: "3"
       })

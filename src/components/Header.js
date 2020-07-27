@@ -35,6 +35,11 @@ const useStyles = makeStyles((theme) => ({
         top: '10px',
         right: '8%'
     },
+    backButton: {
+        padding: `0px 10px`,
+        alignItems: 'center',
+        cursor: 'pointer'
+    }
 }));
 export default function Header(props) {
     // console.log(props);
@@ -66,10 +71,10 @@ export default function Header(props) {
             </Grid>
 
             <Grid item xs={4} style={{ textAlign: 'right' }}>
-                <Typography component="div" className={classes.legend}>
+                {/* <Typography component="div" className={classes.legend}>
                     <Typography component="span" className={classes.chartSubTile}>6GB</Typography>{` / `}
                     <Typography component="span" className={classes.chartSubTile}>12GB</Typography>
-                </Typography>
+                </Typography> */}
                 {/* <Divider flexItem orientation="vertical" /> */}
                 <span className={classes.divider}>
 
