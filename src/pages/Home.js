@@ -28,9 +28,7 @@ export default function HomePage() {
     files: []
   });
   const [home, setHome] = useState(false)
-  const [refresh, setRefresh] = useState(false)
   const [history, sethistory] = useState({})
-  const [path, setPath] = useState({});
 
   useEffect(() => {
     db.ref(baseRef).on("value", snapshot => {
@@ -40,7 +38,6 @@ export default function HomePage() {
       snapshot.forEach(snap => {
         allNotes.push({ ...snap.val(), key: snap.key });
       });
-      // console.log(allNotes);
       allNotes.filter(note => {
         if (note.type === 'Dir') {
           allFolder.push(note)
@@ -72,7 +69,6 @@ export default function HomePage() {
     xhr.send();
   }
   const handleClick = (data) => {
-    setPath(data);
     db.ref(`${baseRef}/${data.key}`)
       .update({
         clicked: "0",
@@ -108,14 +104,11 @@ export default function HomePage() {
           type: history.type
         })
         .then(_ => {
-          // setPath(data);
-          // console.log(_, 'back', path);
           db.ref(`${baseRef}/${_.key}`)
             .update({
               path: path + '/',
             })
             .then(_ => {
-              // setPath(data);
               sethistory({ ...state.notes[0], path: path })
             });
         });
@@ -172,7 +165,7 @@ export default function HomePage() {
     <>
       <Header
         setHome={(data) => setHome(data)}
-        setRefresh={(data) => setRefresh(data)}
+        // setRefresh={(data) => setRefresh(data)}
         history={history}
         breadcrumb={bread}
         handleBack={handleBack}
