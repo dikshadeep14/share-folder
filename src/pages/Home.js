@@ -138,9 +138,11 @@ export default function HomePage() {
         }
       
         function onReject(error) {
+          if(error.code === "storage/object-not-found") {
           setTimeout(() => {
             httpsReference.getDownloadURL().then(onResolve, onReject);
           }, 2000)
+        }
         }
       });
   }
