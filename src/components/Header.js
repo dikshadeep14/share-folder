@@ -78,11 +78,11 @@ export default function Header(props) {
                 <span className={classes.divider}>
 
                 </span>
-                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={() => {
+                {/* <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={() => {
                     refresh()
                 }}>
                     <RefreshIcon />
-                </IconButton>
+                </IconButton> */}
                 <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={() => {
                     home()
                 }}>
