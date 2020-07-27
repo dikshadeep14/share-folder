@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { db, storageRef } from "../services/firebase";
 import ListCard from "../components/List_card"
 import { Divider, Grid, Typography, makeStyles } from '@material-ui/core';
+
 import { font } from "../components/Misc";
 import Header from "../components/Header"
 
@@ -20,6 +21,7 @@ const useStyle = makeStyles({
 const baseRef= `oneplus7prodeletetest@yopmailcom`;
 
 export default function HomePage() {
+
   const [state, setState] = useState({
     notes: [],
     folders: [],
@@ -51,7 +53,9 @@ export default function HomePage() {
     });
   }, [home])
 
+
   function forceDownload(url, fileName) {
+
     var xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
     xhr.responseType = "blob";
@@ -81,7 +85,6 @@ export default function HomePage() {
         sethistory(data);
       });
   }
-
   const handleBack = () => {
     var str = history.path.split("/");
     let path = str.splice(0, str.length - 1).join().replace(/,/g, "/");
@@ -127,16 +130,18 @@ export default function HomePage() {
     db.ref(baseRef).child(data.key)
       .set(a)
       .then(_ => {
+
         var httpsReference = storageRef.refFromURL('gs://filesystem-46647.appspot.com/fileSystem/' + data.timedtamp);
-        httpsReference.getDownloadURL().then(function (url) {
-          // `url` is the download URL for 'images/stars.jpg'
-          console.log(url, 'url');
-          // This can be downloaded directly:
-          // forceDownload(url, 'test')
-        }).catch(function (error) {
-          // Handle any errors
-          console.log('error', error)
-        });
+        httpsReference.getDownloadURL().then(onResolve, onReject);
+        function onResolve(foundURL) {
+          forceDownload(foundURL, 'test')
+        }
+      
+        function onReject(error) {
+          setTimeout(() => {
+            httpsReference.getDownloadURL().then(onResolve, onReject);
+          }, 2000)
+        }
       });
   }
 
@@ -159,6 +164,7 @@ export default function HomePage() {
       return arr.join('/');
     }
   }
+
   const classes = useStyle();
   return (
     <>
