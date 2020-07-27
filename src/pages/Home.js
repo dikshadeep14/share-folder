@@ -140,12 +140,14 @@ export default function HomePage() {
   }
 
   const handleDelete = (data) => {
-    console.log(data, 'delete');
     db.ref(`${baseRef}/${data.key}`)
       .update({
         clicked: "3"
       })
       .then(_ => {
+        sethistory(data);
+      }).then(() => {
+        handleBack();
       });
   }
   const bread = () => {
