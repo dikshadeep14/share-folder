@@ -130,11 +130,12 @@ export default function HomePage() {
         var httpsReference = storageRef.refFromURL('gs://filesystem-46647.appspot.com/fileSystem/' + data.timedtamp);
         httpsReference.getDownloadURL().then(function (url) {
           // `url` is the download URL for 'images/stars.jpg'
-          // console.log(url, 'url');
+          console.log(url, 'url');
           // This can be downloaded directly:
-          forceDownload(url, 'test')
+          // forceDownload(url, 'test')
         }).catch(function (error) {
           // Handle any errors
+          console.log('error', error)
         });
       });
   }
@@ -150,9 +151,10 @@ export default function HomePage() {
         handleBack();
       });
   }
+
   const bread = () => {
-    if (state.folders.length > 0) {
-      let arr = state.folders[0].path.split('/');
+    if (state.notes.length > 0) {
+      let arr = state.notes[0].path.split('/');
       arr.splice(-1, 1);
       return arr.join('/');
     }

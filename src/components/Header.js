@@ -65,7 +65,7 @@ export default function Header(props) {
             </Grid>
             <Grid item xs={7} style={{ textAlign: 'left', padding: 10 }}>
 
-                <Typography variant="h6" color="inherit">
+                <Typography color="inherit">
                     {props?.history?.path || props.breadcrumb()}
                 </Typography>
             </Grid>
