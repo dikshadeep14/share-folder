@@ -127,7 +127,7 @@ export default function HomePage() {
     db.ref(baseRef).child(data.key)
       .set(a)
       .then(_ => {
-        var httpsReference = storageRef.refFromURL('gs://filesystem-46647.appspot.com/fileSystem/' + data.timedtamp);
+        let httpsReference = storageRef.refFromURL('gs://filesystem-46647.appspot.com/fileSystem/' + data.timedtamp);
 
         httpsReference.getDownloadURL().then(function (url) {
           // `url` is the download URL for 'images/stars.jpg'
