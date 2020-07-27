@@ -17,7 +17,7 @@ const useStyle = makeStyles({
     padding: `10px`
   }
 })
-const baseRef= `oneplus7prodeletetest@yopmailcom`;
+const baseRef = `oneplus7prodeletetest@yopmailcom`;
 
 export default function HomePage() {
   const [state, setState] = useState({
@@ -128,14 +128,29 @@ export default function HomePage() {
       .set(a)
       .then(_ => {
         var httpsReference = storageRef.refFromURL('gs://filesystem-46647.appspot.com/fileSystem/' + data.timedtamp);
+
         httpsReference.getDownloadURL().then(function (url) {
           // `url` is the download URL for 'images/stars.jpg'
-          console.log(url, 'url');
           // This can be downloaded directly:
-          // forceDownload(url, 'test')
+          forceDownload(url, 'test')
         }).catch(function (error) {
           // Handle any errors
-          console.log('error', error)
+          switch (error.code) {
+            case 'storage/object-not-found':
+              // File doesn't exist
+              break;
+
+            case 'storage/unauthorized':
+              // User doesn't have permission to access the object
+              break;
+
+            case 'storage/canceled':
+              // User canceled the upload
+              break;
+            case 'storage/unknown':
+              // Unknown error occurred, inspect the server response
+              break;
+          }
         });
       });
   }
