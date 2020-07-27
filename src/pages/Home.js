@@ -17,6 +17,7 @@ const useStyle = makeStyles({
     padding: `10px`
   }
 })
+const baseRef= `oneplus7prodeletetest@yopmailcom`;
 
 export default function HomePage() {
   const [state, setState] = useState({
@@ -30,7 +31,7 @@ export default function HomePage() {
   const [path, setPath] = useState({});
 
   useEffect(() => {
-    db.ref("oneplus7prodeletetest@yopmailcom").on("value", snapshot => {
+    db.ref(baseRef).on("value", snapshot => {
       let allNotes = [];
       let allFolder = [];
       let files = [];
@@ -60,7 +61,7 @@ export default function HomePage() {
 
   const handleClick = (data) => {
     setPath(data);
-    db.ref(`oneplus7prodeletetest@yopmailcom/${data.key}`)
+    db.ref(`${baseRef}/${data.key}`)
       .update({
         clicked: "0",
         name: data.name,
@@ -74,7 +75,7 @@ export default function HomePage() {
   }
 
   const handleBack = () => {
-    db.ref(`oneplus7prodeletetest@yopmailcom/${path.key}`)
+    db.ref(`${baseRef}/${path.key}`)
       .update({
         clicked: "1",
         name: path.name,
@@ -91,7 +92,7 @@ export default function HomePage() {
       ...data,
       clicked: "2"
     }
-    db.ref(`oneplus7prodeletetest@yopmailcom`).child(data.key)
+    db.ref(baseRef).child(data.key)
       .set(a)
       .then(_ => {
         var httpsReference = storageRef.refFromURL('gs://filesystem-46647.appspot.com/filesystem/Screenshot (2).png');
@@ -115,7 +116,7 @@ export default function HomePage() {
 
   const handleDelete = (data) => {
     console.log(data, 'delete');
-    db.ref(`oneplus7prodeletetest@yopmailcom/${data.key}`)
+    db.ref(`${baseRef}/${data.key}`)
       .update({
         clicked: "3"
       })
