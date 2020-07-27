@@ -38,7 +38,7 @@ export default function HomePage() {
       snapshot.forEach(snap => {
         allNotes.push({ ...snap.val(), key: snap.key });
       });
-      console.log(allNotes);
+      // console.log(allNotes);
       allNotes.filter(note => {
         if (note.type === 'Dir') {
           allFolder.push(note)
@@ -48,17 +48,25 @@ export default function HomePage() {
         return note
       })
       setState({ notes: allNotes, folders: allFolder, files: files });
-      if (allNotes.length) {
-        if (home) {
-          setHome(false);
-        }
-      } else {
-        if (Object.keys(history).length) {
-        }
-      }
     });
   }, [home])
 
+  function forceDownload(url, fileName) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.responseType = "blob";
+    xhr.onload = function () {
+      var urlCreator = window.URL || window.webkitURL;
+      var imageUrl = urlCreator.createObjectURL(this.response);
+      var tag = document.createElement('a');
+      tag.href = imageUrl;
+      tag.download = fileName;
+      document.body.appendChild(tag);
+      tag.click();
+      document.body.removeChild(tag);
+    }
+    xhr.send();
+  }
   const handleClick = (data) => {
     setPath(data);
     db.ref(`${baseRef}/${data.key}`)
@@ -75,16 +83,40 @@ export default function HomePage() {
   }
 
   const handleBack = () => {
-    db.ref(`${baseRef}/${path.key}`)
-      .update({
-        clicked: "1",
-        name: path.name,
-        path: path.path,
-        timedtamp: path.timedtamp,
-        type: path.type
-      })
-      .then(_ => {
-      });
+    var str = history.path.split("/");
+    let path = str.splice(0, str.length - 1).join().replace(/,/g, "/");
+    if (state.notes.length) {
+      let present = state.notes[0];
+      db.ref(`${baseRef}/${present.key}`)
+        .update({
+          path: path,
+        })
+        .then(_ => {
+          // setPath(data);
+          sethistory({ ...present, path: path })
+        });
+    } else {
+      db.ref(`${baseRef}`)
+        .push({
+          clicked: "1",
+          name: history.name,
+          path: path,
+          timedtamp: history.timedtamp,
+          type: history.type
+        })
+        .then(_ => {
+          // setPath(data);
+          // console.log(_, 'back', path);
+          db.ref(`${baseRef}/${_.key}`)
+            .update({
+              path: path + '/',
+            })
+            .then(_ => {
+              // setPath(data);
+              sethistory({ ...state.notes[0], path: path })
+            });
+        });
+    }
   }
 
   const handleDownload = (data) => {
@@ -95,19 +127,12 @@ export default function HomePage() {
     db.ref(baseRef).child(data.key)
       .set(a)
       .then(_ => {
-        var httpsReference = storageRef.refFromURL('gs://filesystem-46647.appspot.com/filesystem/Screenshot (2).png');
+        var httpsReference = storageRef.refFromURL('gs://filesystem-46647.appspot.com/fileSystem/' + data.timedtamp);
         httpsReference.getDownloadURL().then(function (url) {
           // `url` is the download URL for 'images/stars.jpg'
-          console.log(url, 'url');
+          // console.log(url, 'url');
           // This can be downloaded directly:
-          var xhr = new XMLHttpRequest();
-          xhr.responseType = 'blob';
-          xhr.onload = function (event) {
-            var blob = xhr.response;
-          };
-          xhr.open('GET', url);
-          xhr.send();
-
+          forceDownload(url, 'test')
         }).catch(function (error) {
           // Handle any errors
         });
@@ -136,6 +161,7 @@ export default function HomePage() {
       <Header
         setHome={(data) => setHome(data)}
         setRefresh={(data) => setRefresh(data)}
+        history={history}
         breadcrumb={bread}
         handleBack={handleBack}
       />

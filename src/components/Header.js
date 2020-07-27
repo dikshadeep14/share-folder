@@ -7,7 +7,6 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import HomeIcon from '@material-ui/icons/Home';
 import { Divider } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -36,14 +35,14 @@ const useStyles = makeStyles((theme) => ({
         top: '10px',
         right: '8%'
     },
-    backButton:{
+    backButton: {
         padding: `0px 10px`,
         alignItems: 'center',
         cursor: 'pointer'
     }
 }));
 export default function Header(props) {
-    console.log(props);
+    // console.log(props);
     const classes = useStyles();
     const refresh = () => {
         props.setRefresh(true)
@@ -53,20 +52,29 @@ export default function Header(props) {
     }
     return (
         <Grid container className={classes.root} direction="row" justify="space-between" alignItems="center">
-            <span className={classes.backButton} onClick={props.handleBack}>
-                <ArrowBackIcon />
-            </span>
+            <Grid item xs={1} style={{ textAlign: 'center', }}>
+                {props.history?.path ?
+                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={() => {
+                        props.handleBack();
+                    }}>
+                        <ArrowBackIcon />
+                    </IconButton>
+                    :
+                    null
+                }
+            </Grid>
             <Grid item xs={7} style={{ textAlign: 'left', padding: 10 }}>
+
                 <Typography variant="h6" color="inherit">
-                    {props.breadcrumb()}
+                    {props?.history?.path || props.breadcrumb()}
                 </Typography>
             </Grid>
 
             <Grid item xs={4} style={{ textAlign: 'right' }}>
-                <Typography component="div" className={classes.legend}>
+                {/* <Typography component="div" className={classes.legend}>
                     <Typography component="span" className={classes.chartSubTile}>6GB</Typography>{` / `}
                     <Typography component="span" className={classes.chartSubTile}>12GB</Typography>
-                </Typography>
+                </Typography> */}
                 {/* <Divider flexItem orientation="vertical" /> */}
                 <span className={classes.divider}>
 
